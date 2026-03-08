@@ -1,7 +1,21 @@
 #!/usr/bin/env python3
 """
 CTF Auto-Recon Script
-Usage: python3 scripts/recon.py <target_url_or_ip> [--mode web|pwn|forensics]
+---------------------
+Automates common first-pass reconnaissance tasks for CTF challenges across
+three modes:
+
+  web   — HTTP header inspection, robots.txt, .git exposure, common paths
+  file  — file-type detection, strings, hex dump, binwalk, exiftool
+  pwn   — checksec, interesting strings, symbol table, suggested GDB commands
+
+Usage:
+    python3 scripts/recon.py <target_url_or_ip> [--mode web|file|pwn]
+
+Examples:
+    python3 scripts/recon.py http://challenge.ctf.site --mode web
+    python3 scripts/recon.py ./suspicious_file.png     --mode file
+    python3 scripts/recon.py ./vuln                    --mode pwn
 """
 
 import argparse
@@ -16,7 +30,9 @@ YELLOW= "\033[93m"
 RED   = "\033[91m"
 RESET = "\033[0m"
 
-def banner():
+
+def banner() -> None:
+    """Print the ASCII-art banner for the recon tool."""
     print(f"""{CYAN}
   ██████╗ ███████╗ ██████╗ ██████╗ ███╗   ██╗
   ██╔══██╗██╔════╝██╔════╝██╔═══██╗████╗  ██║
@@ -27,7 +43,19 @@ def banner():
   CTF Auto-Recon  |  Zero to Hero
 {RESET}""")
 
-def run(cmd, label):
+
+def run(cmd: str, label: str) -> None:
+    """
+    Execute a shell command and print its output.
+
+    Uses a 30-second timeout so a hanging tool (e.g. nmap without -T4) does
+    not block the entire recon run.
+
+    Args:
+        cmd:   The shell command to run (passed to ``subprocess.run`` with
+               ``shell=True``).
+        label: A short human-readable description printed before the output.
+    """
     print(f"{YELLOW}[*] {label}...{RESET}")
     try:
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=30)
@@ -41,7 +69,20 @@ def run(cmd, label):
         print(f"{RED}    [!] Error: {e}{RESET}")
     print()
 
-def web_recon(target):
+
+def web_recon(target: str) -> None:
+    """
+    Run web-focused reconnaissance against *target*.
+
+    Checks HTTP headers, robots.txt, sitemap.xml, and whether a ``.git``
+    directory is publicly accessible (a common misconfiguration that leaks
+    source code).  Also prints a list of common admin/debug paths to probe
+    manually or with a fuzzer.
+
+    Args:
+        target: The base URL of the web application (e.g.
+                ``http://challenge.ctf.site``).
+    """
     print(f"{CYAN}{'='*50}")
     print(f"  WEB RECON: {target}")
     print(f"{'='*50}{RESET}\n")
@@ -60,7 +101,19 @@ def web_recon(target):
 
     print(f"{GREEN}[✓] Web recon complete. Try Burp Suite for deeper inspection.{RESET}")
 
-def file_recon(filepath):
+
+def file_recon(filepath: str) -> None:
+    """
+    Run file-focused reconnaissance on *filepath*.
+
+    Identifies the file type, searches for flag/password strings, dumps the
+    first 20 lines as hex, checks for embedded files with binwalk, and
+    extracts metadata with exiftool.
+
+    Args:
+        filepath: Path to the file to analyse.  The script exits with an
+                  error message if the file does not exist.
+    """
     print(f"{CYAN}{'='*50}")
     print(f"  FILE RECON: {filepath}")
     print(f"{'='*50}{RESET}\n")
@@ -77,7 +130,19 @@ def file_recon(filepath):
 
     print(f"{GREEN}[✓] File recon complete.{RESET}")
 
-def pwn_recon(binary):
+
+def pwn_recon(binary: str) -> None:
+    """
+    Run binary-focused reconnaissance on *binary*.
+
+    Checks security mitigations (checksec), interesting strings, exported
+    symbols that might indicate a win function, and linked shared libraries.
+    Also prints useful GDB commands to copy-paste during manual analysis.
+
+    Args:
+        binary: Path to the ELF binary to analyse.  The script exits with an
+                error message if the file does not exist.
+    """
     print(f"{CYAN}{'='*50}")
     print(f"  BINARY RECON: {binary}")
     print(f"{'='*50}{RESET}\n")
@@ -100,7 +165,14 @@ def pwn_recon(binary):
     print()
     print(f"{GREEN}[✓] Binary recon complete.{RESET}")
 
-def main():
+
+def main() -> None:
+    """
+    Parse command-line arguments and dispatch to the appropriate recon function.
+
+    Exits with a non-zero status if the target does not exist (for file/pwn
+    modes) or if an invalid mode is specified.
+    """
     banner()
     parser = argparse.ArgumentParser(description="CTF Auto-Recon Helper")
     parser.add_argument("target", help="URL, IP, file path, or binary path")
@@ -114,6 +186,7 @@ def main():
         file_recon(args.target)
     elif args.mode == "pwn":
         pwn_recon(args.target)
+
 
 if __name__ == "__main__":
     main()

