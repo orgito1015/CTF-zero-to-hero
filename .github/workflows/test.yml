@@ -1,0 +1,102 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# CTF Zero-to-Hero — Continuous Integration
+#
+# What this workflow does
+# -----------------------
+# 1. Runs on every push to main and on every pull request targeting main.
+# 2. Sets up Python 3.11.
+# 3. Installs the project's Python dependencies.
+# 4. Smoke-tests every Python script in scripts/ by running it with --help.
+#    If a script crashes on --help it is not safe to use.
+# 5. Validates that every Markdown file under challenges/ has a "Flag" section.
+#    Challenge note templates must always include a Flag section so users know
+#    where to record their solution.
+# ──────────────────────────────────────────────────────────────────────────────
+
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Lint & Smoke-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      # ── 1. Check out the repository ────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Set up Python 3.11 ──────────────────────────────────────────────
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # ── 3. Install dependencies ────────────────────────────────────────────
+      # pwntools  — binary exploitation framework used by pwn_template.py
+      # pycryptodome — cryptographic primitives used in crypto challenges
+      # requests  — HTTP library used in recon helpers
+      # Pillow    — image library used by flag_hunter.py for EXIF extraction
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pwntools pycryptodome requests Pillow
+
+      # ── 4. Smoke-test all scripts with --help ──────────────────────────────
+      # Each script must exit 0 when called with --help.
+      # This catches import errors, syntax errors, and missing stdlib modules.
+      - name: Smoke-test Python scripts (--help)
+        run: |
+          echo "=== Smoke-testing scripts/ ==="
+          failed=0
+          for script in scripts/*.py; do
+            echo -n "  Testing $script ... "
+            if python "$script" --help > /dev/null 2>&1; then
+              echo "OK"
+            else
+              echo "FAILED"
+              python "$script" --help || true   # show the real error
+              failed=1
+            fi
+          done
+          if [ "$failed" -ne 0 ]; then
+            echo "One or more scripts failed the --help smoke test."
+            exit 1
+          fi
+          echo "All scripts passed."
+
+      # ── 5. Validate Markdown challenge notes have a Flag section ───────────
+      # Every file under challenges/**/*.md must contain a line that starts
+      # with "## Flag" (case-insensitive).  This ensures that the notes
+      # template is complete and that contributors haven't accidentally removed
+      # the flag recording section.
+      - name: Validate Markdown files have a Flag section
+        run: |
+          echo "=== Checking for Flag section in challenge notes ==="
+          failed=0
+          for md in challenges/**/*.md challenges/*.md; do
+            # The glob may produce literal "challenges/**/*.md" when no files
+            # match; skip non-existent paths.
+            [ -f "$md" ] || continue
+            echo -n "  Checking $md ... "
+            if grep -qi "^## Flag" "$md"; then
+              echo "OK"
+            else
+              echo "MISSING Flag section"
+              failed=1
+            fi
+          done
+          if [ "$failed" -ne 0 ]; then
+            echo "One or more Markdown files are missing a '## Flag' section."
+            exit 1
+          fi
+          echo "All Markdown files have a Flag section."
