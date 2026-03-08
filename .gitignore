@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Tools output
+*.log
+*.out
+core
+core.*
+
+# CTF artifacts (don't commit challenge files or flags!)
+*.pcap
+*.pcapng
+*.img
+*.vmem
+*.dmp
+*.iso
+flag.txt
+flag
+/flags/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Extracted files from binwalk etc.
+_*extracted/
