@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="All 6 CTF categories explained — Web, Crypto, Pwn, Reversing, Forensics, Misc — with example commands and beginner checklists.">
+  <title>Categories — CTF Zero to Hero</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <span class="brand-icon" aria-hidden="true">&gt;</span>
+        CTF Zero to Hero
+      </a>
+      <button class="hamburger" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="guide.html">Guide</a></li>
+        <li><a href="categories.html">Categories</a></li>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="resources.html">Resources</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+
+      <section style="padding-bottom: 0;">
+        <h1 class="section-heading">The 6 CTF Categories</h1>
+        <p class="section-subheading">Deep dives into each discipline — with real commands, payloads, and checklists.</p>
+      </section>
+
+      <!-- WEB EXPLOITATION -->
+      <div class="category-section" id="web">
+        <div class="category-header">
+          <span class="category-icon">🌐</span>
+          <h2>Web Exploitation</h2>
+          <span class="badge badge-beginner">Beginner Friendly</span>
+          <span class="difficulty" aria-label="Difficulty: 2 of 4">
+            <span class="dot dot-filled">●</span>
+            <span class="dot dot-filled">●</span>
+            <span class="dot dot-empty">○</span>
+            <span class="dot dot-empty">○</span>
+          </span>
+        </div>
+        <div class="category-body">
+          <div>
+            <h3>About This Category</h3>
+            <p>Web challenges involve finding and exploiting vulnerabilities in websites and web applications. This is one of the most approachable categories because you interact with familiar technology — browsers, forms, and HTTP requests.</p>
+            <p>Common vulnerability types include SQL injection, Cross-Site Scripting (XSS), insecure cookies, directory traversal, Server-Side Template Injection (SSTI), and broken authentication.</p>
+            <h3>What You'll Learn</h3>
+            <ul>
+              <li>How HTTP requests and responses work</li>
+              <li>SQL injection and input sanitization flaws</li>
+              <li>XSS and cookie stealing techniques</li>
+              <li>Directory and file enumeration</li>
+              <li>Source code inspection and hidden comments</li>
+            </ul>
+            <h3>Beginner Checklist</h3>
+            <ul class="checklist">
+              <li>View page source (<code>Ctrl+U</code>) and check for comments or hidden fields</li>
+              <li>Check <code>/robots.txt</code> and <code>/sitemap.xml</code> for hidden paths</li>
+              <li>Test login forms for SQL injection (<code>' OR '1'='1</code>)</li>
+              <li>Test input fields for reflected XSS (<code>&lt;script&gt;alert(1)&lt;/script&gt;</code>)</li>
+              <li>Use Burp Suite to intercept and modify requests</li>
+              <li>Fuzz directories with <code>dirb</code> or <code>gobuster</code></li>
+              <li>Inspect cookies and JWT tokens for weak secrets</li>
+            </ul>
+          </div>
+          <div>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="code-lang">bash / sql</span>
+                <button class="copy-btn" type="button">Copy</button>
+              </div>
+              <pre><code># Basic recon
+curl -I https://target.ctf/
+curl https://target.ctf/robots.txt
+
+# Directory fuzzing
+gobuster dir -u http://target.ctf/ -w /usr/share/wordlists/dirb/common.txt
+
+# SQL injection test payloads
+' OR '1'='1'--
+' OR 1=1--
+admin'--
+' UNION SELECT null,null,null--
+
+# Read cookies
+curl -c cookies.txt -b cookies.txt http://target.ctf/login
+
+# SQLMap automated injection
+sqlmap -u "http://target.ctf/login" --forms --batch --level=3</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CRYPTOGRAPHY -->
+      <div class="category-section" id="crypto">
+        <div class="category-header">
+          <span class="category-icon">🔐</span>
+          <h2>Cryptography</h2>
+          <span class="badge badge-intermediate">Intermediate</span>
+          <span class="difficulty" aria-label="Difficulty: 3 of 4">
+            <span class="dot dot-filled">●</span>
+            <span class="dot dot-filled">●</span>
+            <span class="dot dot-filled">●</span>
+            <span class="dot dot-empty">○</span>
+          </span>
+        </div>
+        <div class="category-body">
+          <div>
+            <h3>About This Category</h3>
+            <p>Crypto challenges require breaking codes, deciphering encrypted messages, or exploiting mathematical weaknesses in cryptographic implementations. Understanding both classical and modern cryptography is essential.</p>
+            <p>Common challenge types: base64/hex encoding, ROT13/Caesar ciphers, XOR encryption, weak RSA parameters, hash cracking, AES misuse, and custom cipher implementations.</p>
+            <h3>What You'll Learn</h3>
+            <ul>
+              <li>Classical ciphers: Caesar, Vigenère, XOR</li>
+              <li>Encoding schemes: Base64, hex, binary, URL encoding</li>
+              <li>RSA fundamentals and common weaknesses</li>
+              <li>Hash functions and cracking techniques</li>
+              <li>Using Python for custom crypto attacks</li>
+            </ul>
+            <h3>Beginner Checklist</h3>
+            <ul class="checklist">
+              <li>Identify the encoding type before attempting to crack</li>
+              <li>Try CyberChef "Magic" wand — it autodetects common encodings</li>
+              <li>Test for XOR with single byte and known-plaintext attacks</li>
+              <li>Crack MD5/SHA1 hashes with <code>hashcat</code> or online rainbow tables</li>
+              <li>Look for RSA parameters (n, e, p, q) and check if n is factorable</li>
+              <li>Use <a href="https://factordb.com" target="_blank" rel="noopener">factordb.com</a> to factor small RSA moduli</li>
+            </ul>
+          </div>
+          <div>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="code-lang">bash / python</span>
+                <button class="copy-btn" type="button">Copy</button>
+              </div>
+              <pre><code># Base64 decode
+echo "Q1RGe2Jhc2U2NH0=" | base64 -d
+
+# Hex decode
+echo "4354467b68657821" | xxd -r -p
+
+# ROT13
+echo "PGS{ebg13}" | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+
+# XOR single byte brute-force (Python)
+cipher = bytes.fromhex("1b3c2f...")
+for k in range(256):
+    plain = bytes([b ^ k for b in cipher])
+    if b"CTF{" in plain:
+        print(k, plain)
+
+# Crack a hash
+hashcat -m 0 hash.txt /usr/share/wordlists/rockyou.txt</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PWN -->
+      <div class="category-section" id="pwn">
+        <div class="category-header">
+          <span class="category-icon">💥</span>
+          <h2>Pwn / Binary Exploitation</h2>
+          <span class="badge badge-advanced">Advanced</span>
+          <span class="difficulty" aria-label="Difficulty: 4 of 4">
+            <span class="dot dot-filled">●</span>
+            <span class="dot dot-filled">●</span>
+            <span class="dot dot-filled">●</span>
+            <span class="dot dot-filled">●</span>
+          </span>
+        </div>
+        <div class="category-body">
+          <div>
+            <h3>About This Category</h3>
+            <p>Pwn challenges involve exploiting memory corruption vulnerabilities in compiled programs. You interact with a running process — either locally or via a TCP connection — and manipulate its memory to gain control.</p>
+            <p>Common techniques: buffer overflows, return-oriented programming (ROP), format string exploits, heap exploitation, and shellcode injection.</p>
+            <h3>What You'll Learn</h3>
+            <ul>
+              <li>How memory layout and the stack work in x86/x86_64</li>
+              <li>Buffer overflow and return address overwriting</li>
+              <li>Finding and controlling the instruction pointer</li>
+              <li>Building ROP chains to bypass NX/DEP</li>
+              <li>Using pwntools to write clean exploit scripts</li>
+            </ul>
+            <h3>Beginner Checklist</h3>
+            <ul class="checklist">
+              <li>Run <code>checksec</code> to identify binary protections (NX, PIE, RELRO, canary)</li>
+              <li>Run the binary and test for crash with a long input</li>
+              <li>Use <code>cyclic</code> (pwntools) to find the exact overflow offset</li>
+              <li>Search for a <code>win()</code> or <code>shell()</code> function with <code>nm</code> or Ghidra</li>
+              <li>Overwrite return address with the win function address</li>
+              <li>Build a ROP chain when NX is enabled</li>
+            </ul>
+          </div>
+          <div>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="code-lang">python / bash</span>
+                <button class="copy-btn" type="button">Copy</button>
+              </div>
+              <pre><code># Check binary protections
+checksec --file=./vuln
+
+# Find crash offset
+python3 -c "print('A'*200)" | ./vuln
+cyclic 200 | ./vuln
+
+# Basic pwntools template
+from pwn import *
+
+elf = ELF('./vuln')
+p = process('./vuln')
+# p = remote('target.ctf', 1337)
+
+offset = 64
+win_addr = elf.symbols['win']
+payload = b'A' * offset + p64(win_addr)
+
+p.sendlineafter(b'> ', payload)
+p.interactive()</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REVERSE ENGINEERING -->
+      <div class="category-section" id="re">
+        <div class="category-header">
+          <span class="category-icon">🔍</span>
+          <h2>Reverse Engineering</h2>
+          <span class="badge badge-intermediate">Intermediate</span>
+          <span class="difficulty" aria-label="Difficulty: 3 of 4">
+            <span class="dot dot-filled">●</span>
+            <span class="dot dot-filled">●</span>
+            <span class="dot dot-filled">●</span>
+            <span class="dot dot-empty">○</span>
+          </span>
+        </div>
+        <div class="category-body">
+          <div>
+            <h3>About This Category</h3>
+            <p>RE challenges give you a compiled binary and ask you to figure out what it does, find a hidden password, or understand a custom algorithm — all without the original source code.</p>
+            <p>You'll work with disassemblers, decompilers, and dynamic analysis tools to reconstruct the program's logic and extract the flag.</p>
+            <h3>What You'll Learn</h3>
+            <ul>
+              <li>Reading x86/x86_64 assembly code</li>
+              <li>Using Ghidra or IDA Free to decompile binaries</li>
+              <li>Dynamic analysis with GDB and ltrace/strace</li>
+              <li>Identifying string comparison and flag check logic</li>
+              <li>Patching binaries to bypass checks</li>
+            </ul>
+            <h3>Beginner Checklist</h3>
+            <ul class="checklist">
+              <li>Run <code>file</code> to identify binary type and architecture</li>
+              <li>Run <code>strings</code> — flags are sometimes stored in plaintext</li>
+              <li>Use <code>ltrace</code>/<code>strace</code> to trace library/system calls at runtime</li>
+              <li>Open in Ghidra and decompile the <code>main</code> function</li>
+              <li>Find the flag comparison — look for <code>strcmp</code>, <code>strncmp</code>, or custom loops</li>
+              <li>Patch the binary or reverse the algorithm to extract the flag</li>
+            </ul>
+          </div>
+          <div>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="code-lang">bash</span>
+                <button class="copy-btn" type="button">Copy</button>
+              </div>
+              <pre><code># Identify file type
+file ./challenge
+
+# Search for readable strings
+strings ./challenge | grep -i "ctf\|flag\|key\|pass"
+
+# Trace library calls at runtime
+ltrace ./challenge
+strace ./challenge
+
+# List exported/imported symbols
+nm ./challenge | grep -i "win\|flag\|check"
+objdump -d ./challenge | less
+
+# Ghidra headless analysis
+analyzeHeadless /tmp/ghidra_project proj \
+  -import ./challenge -postScript PrintStringDump.java</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORENSICS -->
+      <div class="category-section" id="forensics">
+        <div class="category-header">
+          <span class="category-icon">🕵️</span>
+          <h2>Forensics / OSINT</h2>
+          <span class="badge badge-beginner">Beginner Friendly</span>
+          <span class="difficulty" aria-label="Difficulty: 2 of 4">
+            <span class="dot dot-filled">●</span>
+            <span class="dot dot-filled">●</span>
+            <span class="dot dot-empty">○</span>
+            <span class="dot dot-empty">○</span>
+          </span>
+        </div>
+        <div class="category-body">
+          <div>
+            <h3>About This Category</h3>
+            <p>Forensics challenges hide data inside files, network packet captures, disk images, memory dumps, or images. Your job is to investigate the artifact and extract the hidden flag.</p>
+            <p>OSINT (Open Source Intelligence) challenges ask you to find information about a person, place, or organization using only publicly available sources.</p>
+            <h3>What You'll Learn</h3>
+            <ul>
+              <li>File format identification and metadata analysis</li>
+              <li>Steganography: data hidden inside images/audio</li>
+              <li>Network packet analysis with Wireshark</li>
+              <li>Extracting embedded files with binwalk</li>
+              <li>Memory forensics with Volatility</li>
+            </ul>
+            <h3>Beginner Checklist</h3>
+            <ul class="checklist">
+              <li>Run <code>file</code> to confirm the actual file type (extensions lie)</li>
+              <li>Run <code>strings</code> — look for the flag pattern in the raw output</li>
+              <li>Run <code>binwalk</code> to extract any embedded files</li>
+              <li>Check metadata with <code>exiftool</code> — flags hide in EXIF comments</li>
+              <li>Open <code>.pcap</code> files in Wireshark and follow TCP/HTTP streams</li>
+              <li>For images, try <code>steghide</code> and <code>zsteg</code> for steganography</li>
+            </ul>
+          </div>
+          <div>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="code-lang">bash</span>
+                <button class="copy-btn" type="button">Copy</button>
+              </div>
+              <pre><code># Identify file and check magic bytes
+file suspicious.png
+xxd suspicious.png | head -5
+
+# Search for flag in raw bytes
+strings suspicious.png | grep -i "ctf\|flag"
+
+# Extract embedded files
+binwalk -e suspicious.png
+
+# Check image/file metadata
+exiftool suspicious.png
+
+# Network capture analysis
+wireshark capture.pcap &
+tshark -r capture.pcap -qz "follow,tcp,ascii,0"
+
+# Steganography extraction
+steghide extract -sf image.jpg
+zsteg image.png</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MISC -->
+      <div class="category-section" id="misc">
+        <div class="category-header">
+          <span class="category-icon">⚙️</span>
+          <h2>Misc</h2>
+          <span class="badge badge-beginner">Beginner Friendly</span>
+          <span class="difficulty" aria-label="Difficulty: 1 of 4">
+            <span class="dot dot-filled">●</span>
+            <span class="dot dot-empty">○</span>
+            <span class="dot dot-empty">○</span>
+            <span class="dot dot-empty">○</span>
+          </span>
+        </div>
+        <div class="category-body">
+          <div>
+            <h3>About This Category</h3>
+            <p>Misc challenges are wildly varied — scripting puzzles, trivia, programming problems, jail escapes, QR codes, audio challenges, and creative lateral-thinking problems that don't fit neatly into other categories.</p>
+            <p>These often require creativity and a broad skillset more than deep expertise. They are great entry points for beginners because the solutions are highly varied.</p>
+            <h3>What You'll Learn</h3>
+            <ul>
+              <li>Python scripting for automation and data manipulation</li>
+              <li>Bash/shell one-liners for quick processing</li>
+              <li>Recognizing obscure encodings and formats</li>
+              <li>Escaping sandboxed Python/bash environments</li>
+              <li>Creative problem solving under time pressure</li>
+            </ul>
+            <h3>Beginner Checklist</h3>
+            <ul class="checklist">
+              <li>Read the challenge description extremely carefully — the hint is in the text</li>
+              <li>Google every unusual term, filename, or reference in the challenge</li>
+              <li>Try Python scripting to automate repetitive processing</li>
+              <li>Check if input/output is provided — write a script to generate all permutations</li>
+              <li>Look for hidden input channels: URL parameters, HTTP headers, environment variables</li>
+              <li>For jail escapes, try <code>__import__</code>, <code>os.system</code>, and class hierarchy traversal</li>
+            </ul>
+          </div>
+          <div>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="code-lang">python</span>
+                <button class="copy-btn" type="button">Copy</button>
+              </div>
+              <pre><code>#!/usr/bin/env python3
+# Generic CTF scripting skeleton
+
+import socket
+import re
+
+HOST = 'target.ctf'
+PORT = 1337
+
+def solve():
+    with socket.create_connection((HOST, PORT)) as s:
+        # Read challenge prompt
+        data = s.recv(4096).decode()
+        print(data)
+
+        # Parse and respond
+        # answer = compute_answer(data)
+        # s.sendall(f"{answer}\n".encode())
+
+        # Read response and extract flag
+        response = s.recv(4096).decode()
+        flag = re.search(r'CTF\{[^}]+\}', response)
+        if flag:
+            print("FLAG:", flag.group())
+
+if __name__ == '__main__':
+    solve()</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- container -->
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <span class="footer-text">CTF Zero to Hero &mdash; Educational purposes only</span>
+      <a href="https://github.com/orgito1015/CTF-zero-to-hero" class="footer-link" target="_blank" rel="noopener">
+        &#128279; GitHub Repository
+      </a>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

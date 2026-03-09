@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Beginner's guide to CTF — everything you need to get started with Capture The Flag competitions.">
+  <title>Beginner's Guide — CTF Zero to Hero</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <span class="brand-icon" aria-hidden="true">&gt;</span>
+        CTF Zero to Hero
+      </a>
+      <button class="hamburger" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="guide.html">Guide</a></li>
+        <li><a href="categories.html">Categories</a></li>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="resources.html">Resources</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <div class="guide-layout">
+
+        <!-- SIDEBAR TOC -->
+        <aside class="guide-sidebar">
+          <p class="sidebar-title">Contents</p>
+          <ul class="sidebar-nav">
+            <li><a href="#what-is-ctf">What is CTF?</a></li>
+            <li><a href="#flag-format">Flag Format</a></li>
+            <li><a href="#competition-types">Competition Types</a></li>
+            <li><a href="#your-first-challenge">Your First Challenge</a></li>
+            <li><a href="#six-step-method">The 6-Step Method</a></li>
+            <li><a href="#tools-you-need">Tools You Need</a></li>
+            <li><a href="#practice-platforms">Practice Platforms</a></li>
+            <li><a href="#tips-mindset">Tips &amp; Mindset</a></li>
+          </ul>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <article class="guide-content">
+
+          <!-- What is CTF? -->
+          <section id="what-is-ctf">
+            <h2>What is CTF?</h2>
+            <p>
+              CTF (Capture The Flag) is a type of cybersecurity competition where participants solve security challenges
+              to find hidden strings called "flags." These competitions are designed to teach and test real-world hacking
+              skills in a legal, controlled environment.
+            </p>
+            <p>
+              Challenges cover a wide range of topics: exploiting web vulnerabilities, breaking cryptographic systems,
+              reverse engineering binaries, analyzing network traffic, and more. CTFs are used by security professionals,
+              students, and hobbyists to sharpen their skills and showcase their abilities.
+            </p>
+            <div class="callout">
+              <p>
+                💡 <strong>Think of it like a cybersecurity escape room.</strong> You're given a series of puzzles,
+                each one hiding a secret code. Your job is to solve the puzzle, find the code, and submit it for points
+                — using every hacking trick in the book.
+              </p>
+            </div>
+          </section>
+
+          <!-- Flag Format -->
+          <section id="flag-format">
+            <h2>Flag Format</h2>
+            <p>
+              Flags are unique strings that prove you've solved a challenge. They almost always follow a predictable
+              format set by the competition organizer. The most common format is:
+            </p>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="code-lang">text</span>
+                <button class="copy-btn" type="button">Copy</button>
+              </div>
+              <pre><code>CTF{this_is_a_sample_flag}
+picoCTF{s0me_flag_here_1337}
+HTB{4nother_flag_format}
+flag{you_found_it}</code></pre>
+            </div>
+            <p>
+              The wrapper (e.g., <code>CTF{</code>) is defined by the competition. Everything inside the curly braces
+              is the actual secret value you need to find. When you submit the full string including the wrapper, the
+              system validates it and awards your team points.
+            </p>
+            <p>
+              Some challenges use custom formats or even just a hex string. Always read the challenge description
+              carefully — it will tell you what format to expect.
+            </p>
+          </section>
+
+          <!-- Competition Types -->
+          <section id="competition-types">
+            <h2>Competition Types</h2>
+            <div class="grid-3">
+              <div class="card">
+                <h3 class="card-title">Jeopardy</h3>
+                <p>The most common format. Teams solve independent challenges across multiple categories. Each challenge
+                  is worth a set number of points. Most beginner CTFs use this format.</p>
+              </div>
+              <div class="card">
+                <h3 class="card-title">Attack / Defense</h3>
+                <p>Teams defend their own servers while attacking opponents. Requires both offensive and defensive skills.
+                  Much more advanced — typically for experienced players.</p>
+              </div>
+              <div class="card">
+                <h3 class="card-title">King of the Hill</h3>
+                <p>Teams compete to pwn a shared machine and maintain control. Points are scored for time spent
+                  in control. Real-time and fast-paced.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Your First Challenge -->
+          <section id="your-first-challenge">
+            <h2>Your First Challenge — Step by Step</h2>
+            <p>Here's exactly what to do when you open a CTF challenge for the first time:</p>
+            <ol>
+              <li><strong>Read the description fully.</strong> Challenge authors put important hints in the description. Note every word — the title, flavor text, and any attached files.</li>
+              <li><strong>Check the attachments.</strong> Download every file attached to the challenge. Run <code>file</code> on each one to identify its type.</li>
+              <li><strong>Identify the category.</strong> Web? Crypto? Forensics? Your approach depends heavily on the category.</li>
+              <li><strong>Run basic recon.</strong> Depending on category: <code>strings</code>, <code>binwalk</code>, <code>exiftool</code>, <code>curl</code>, <code>nmap</code> — gather as much information as possible before making assumptions.</li>
+              <li><strong>Search for known techniques.</strong> Most beginner challenges use well-known attack patterns. Google the technique name + "CTF" to find write-ups and tutorials.</li>
+              <li><strong>Try something, then iterate.</strong> Don't wait until you have the perfect plan. Make a hypothesis, try it, and use the feedback to refine your approach.</li>
+              <li><strong>Ask for help or take a break.</strong> If you're stuck for more than 30 minutes, read a hint, ask a teammate, or step away. Fresh eyes solve problems fast.</li>
+            </ol>
+          </section>
+
+          <!-- 6-Step Method -->
+          <section id="six-step-method">
+            <h2>The 6-Step Method</h2>
+            <p>Apply this framework to any CTF challenge, regardless of category:</p>
+            <div class="sixstep-grid">
+              <div class="step-item">
+                <p><span class="step-num">1.</span> <strong>READ</strong> carefully — absorb every detail of the challenge description, title, hints, and attached files before touching any tools.</p>
+              </div>
+              <div class="step-item">
+                <p><span class="step-num">2.</span> <strong>IDENTIFY</strong> the type — determine the category and specific attack surface. Is this a SQL injection? A Caesar cipher? A buffer overflow?</p>
+              </div>
+              <div class="step-item">
+                <p><span class="step-num">3.</span> <strong>ENUMERATE &amp; gather info</strong> — use recon tools to learn everything you can. More data = better hypotheses.</p>
+              </div>
+              <div class="step-item">
+                <p><span class="step-num">4.</span> <strong>RESEARCH &amp; hypothesize</strong> — look up the technique, find similar write-ups, form a theory about how the vulnerability works.</p>
+              </div>
+              <div class="step-item">
+                <p><span class="step-num">5.</span> <strong>ATTEMPT the exploit</strong> — execute your plan methodically. Adjust one variable at a time when something doesn't work.</p>
+              </div>
+              <div class="step-item">
+                <p><span class="step-num">6.</span> <strong>FLAG it!</strong> — submit the flag and document your approach. Writing notes (or a write-up) cements the learning and helps your team.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Tools -->
+          <section id="tools-you-need">
+            <h2>Tools You Need</h2>
+            <p>You don't need everything at once. Start with these essentials:</p>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Tool</th>
+                    <th>Category</th>
+                    <th>How to Get It</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>CyberChef</strong></td>
+                    <td>Crypto / Encoding</td>
+                    <td>Browser — <a href="https://gchq.github.io/CyberChef/" target="_blank" rel="noopener">gchq.github.io/CyberChef</a></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Burp Suite Community</strong></td>
+                    <td>Web</td>
+                    <td><code>apt install burpsuite</code> or portswigger.net</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Ghidra</strong></td>
+                    <td>Reverse Engineering</td>
+                    <td>Download from ghidra-sre.org</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Wireshark</strong></td>
+                    <td>Forensics</td>
+                    <td><code>apt install wireshark</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>pwntools</strong></td>
+                    <td>Pwn</td>
+                    <td><code>pip3 install pwntools</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>binwalk</strong></td>
+                    <td>Forensics</td>
+                    <td><code>apt install binwalk</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="mt-lg">See the full <a href="tools.html">Tools &amp; Setup page</a> for the complete list and one-click installer.</p>
+          </section>
+
+          <!-- Practice Platforms -->
+          <section id="practice-platforms">
+            <h2>Practice Platforms</h2>
+            <p>The best way to learn CTF is to actually do CTF challenges. Start with these platforms:</p>
+            <ul>
+              <li>
+                <strong><a href="https://picoctf.org" target="_blank" rel="noopener">PicoCTF</a></strong> —
+                The best starting point. A huge archive of beginner-friendly challenges from Carnegie Mellon University. Free forever.
+              </li>
+              <li>
+                <strong><a href="https://hackthebox.com" target="_blank" rel="noopener">HackTheBox</a></strong> —
+                Practice machines and CTF challenges with a strong community. Mix of beginner to advanced.
+              </li>
+              <li>
+                <strong><a href="https://tryhackme.com" target="_blank" rel="noopener">TryHackMe</a></strong> —
+                Guided learning paths with structured rooms. Great for absolute beginners.
+              </li>
+              <li>
+                <strong><a href="https://overthewire.org" target="_blank" rel="noopener">OverTheWire</a></strong> —
+                Classic wargames that teach Linux fundamentals and basic exploitation. Start with Bandit.
+              </li>
+              <li>
+                <strong><a href="https://ctftime.org" target="_blank" rel="noopener">CTFtime.org</a></strong> —
+                Calendar of upcoming real CTF events worldwide, plus a write-up archive. All levels.
+              </li>
+            </ul>
+          </section>
+
+          <!-- Tips & Mindset -->
+          <section id="tips-mindset">
+            <h2>Tips &amp; Mindset</h2>
+            <ul>
+              <li><strong>Google is your best tool.</strong> Every CTF technique has been documented somewhere. Search "<em>vulnerability name</em> CTF exploit" and read multiple resources.</li>
+              <li><strong>Read other people's write-ups.</strong> After solving (or failing) a challenge, read how others solved it. This is the fastest way to learn new techniques.</li>
+              <li><strong>Keep notes on everything.</strong> Document commands, outputs, hypotheses, and results. You'll need to backtrack, and notes save enormous time.</li>
+              <li><strong>Work in a VM or dedicated environment.</strong> Some challenges involve running untrusted code. Protect your host machine by working in an isolated environment.</li>
+              <li><strong>Don't be afraid to fail.</strong> Every unsolved challenge is a learning opportunity. The flag you can't get today is the one you'll recognize instantly next time.</li>
+              <li><strong>Team up.</strong> CTFs are better with others. Different team members have different strengths. Even a two-person team drastically increases your coverage.</li>
+            </ul>
+          </section>
+
+        </article>
+      </div><!-- guide-layout -->
+    </div><!-- container -->
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <span class="footer-text">CTF Zero to Hero &mdash; Educational purposes only</span>
+      <a href="https://github.com/orgito1015/CTF-zero-to-hero" class="footer-link" target="_blank" rel="noopener">
+        &#128279; GitHub Repository
+      </a>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

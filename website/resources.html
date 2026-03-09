@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CTF Resources — practice platforms, learning links, cheatsheets, and downloads.">
+  <title>Resources — CTF Zero to Hero</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <span class="brand-icon" aria-hidden="true">&gt;</span>
+        CTF Zero to Hero
+      </a>
+      <button class="hamburger" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="guide.html">Guide</a></li>
+        <li><a href="categories.html">Categories</a></li>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="resources.html">Resources</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+
+      <section style="padding-bottom: 0;">
+        <h1 class="section-heading">Resources</h1>
+        <p class="section-subheading">Everything you need to keep learning — platforms, references, cheatsheets, and more.</p>
+      </section>
+
+      <!-- PRACTICE PLATFORMS -->
+      <section>
+        <h2 style="font-size: var(--font-2xl); font-weight: 800; margin-bottom: var(--space-xl);">Practice Platforms</h2>
+        <div class="platform-grid">
+
+          <div class="platform-card">
+            <div style="display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+              <h3>PicoCTF</h3>
+              <span class="badge badge-beginner">Beginner</span>
+            </div>
+            <p>Best starting point. Huge archive of beginner-friendly challenges from Carnegie Mellon University. Free forever, no time limit on the practice archive.</p>
+            <a href="https://picoctf.org" class="btn btn-outline" target="_blank" rel="noopener" style="font-size: var(--font-sm); padding: 0.4rem 1rem;">Visit Platform &rarr;</a>
+          </div>
+
+          <div class="platform-card">
+            <div style="display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+              <h3>HackTheBox</h3>
+              <span class="badge badge-intermediate">Intermediate</span>
+            </div>
+            <p>Practice machines and CTF-style challenges with a strong global community. Excellent for building practical skills across all categories.</p>
+            <a href="https://www.hackthebox.com" class="btn btn-outline" target="_blank" rel="noopener" style="font-size: var(--font-sm); padding: 0.4rem 1rem;">Visit Platform &rarr;</a>
+          </div>
+
+          <div class="platform-card">
+            <div style="display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+              <h3>TryHackMe</h3>
+              <span class="badge badge-beginner">Beginner</span>
+            </div>
+            <p>Guided learning paths with structured "rooms." Perfect for absolute beginners who want step-by-step instruction rather than open-ended challenges.</p>
+            <a href="https://tryhackme.com" class="btn btn-outline" target="_blank" rel="noopener" style="font-size: var(--font-sm); padding: 0.4rem 1rem;">Visit Platform &rarr;</a>
+          </div>
+
+          <div class="platform-card">
+            <div style="display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+              <h3>OverTheWire</h3>
+              <span class="badge badge-beginner">Beginner</span>
+            </div>
+            <p>Classic wargames that teach Linux fundamentals and basic exploitation. Start with Bandit (Linux basics) then progress to Natas (web) and Leviathan.</p>
+            <a href="https://overthewire.org/wargames/" class="btn btn-outline" target="_blank" rel="noopener" style="font-size: var(--font-sm); padding: 0.4rem 1rem;">Visit Platform &rarr;</a>
+          </div>
+
+          <div class="platform-card">
+            <div style="display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+              <h3>CTFtime.org</h3>
+              <span class="badge">All Levels</span>
+            </div>
+            <p>The go-to calendar for upcoming real CTF events worldwide. Also hosts a massive archive of write-ups organized by competition and challenge category.</p>
+            <a href="https://ctftime.org" class="btn btn-outline" target="_blank" rel="noopener" style="font-size: var(--font-sm); padding: 0.4rem 1rem;">Visit Platform &rarr;</a>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- LEARNING RESOURCES -->
+      <section>
+        <h2 style="font-size: var(--font-2xl); font-weight: 800; margin-bottom: var(--space-xl);">Learning Resources</h2>
+        <div class="resources-list">
+
+          <div class="resource-group">
+            <h3>🌐 Web Exploitation</h3>
+            <ul>
+              <li>
+                <span class="resource-name"><a href="https://portswigger.net/web-security" target="_blank" rel="noopener">PortSwigger Web Academy</a></span>
+                <span class="resource-desc">— Free, hands-on labs covering every web vulnerability. The best web security learning resource available.</span>
+              </li>
+              <li>
+                <span class="resource-name"><a href="https://owasp.org/www-project-top-ten/" target="_blank" rel="noopener">OWASP Top 10</a></span>
+                <span class="resource-desc">— The definitive list of the ten most critical web application security risks. Essential reading.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="resource-group">
+            <h3>🔐 Cryptography</h3>
+            <ul>
+              <li>
+                <span class="resource-name"><a href="https://cryptohack.org" target="_blank" rel="noopener">CryptoHack</a></span>
+                <span class="resource-desc">— Interactive crypto challenges with a CTF feel. Covers modern cryptography from RSA to elliptic curves.</span>
+              </li>
+              <li>
+                <span class="resource-name"><a href="https://cryptopals.com" target="_blank" rel="noopener">Cryptopals</a></span>
+                <span class="resource-desc">— Classic crypto challenges that teach you to break real cryptographic systems through hands-on coding.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="resource-group">
+            <h3>💥 Pwn / Binary Exploitation</h3>
+            <ul>
+              <li>
+                <span class="resource-name"><a href="https://pwn.college" target="_blank" rel="noopener">pwn.college</a></span>
+                <span class="resource-desc">— ASU's free binary exploitation course. Structured curriculum from fundamentals to advanced techniques.</span>
+              </li>
+              <li>
+                <span class="resource-name"><a href="https://ropemporium.com" target="_blank" rel="noopener">ROP Emporium</a></span>
+                <span class="resource-desc">— Purpose-built challenges to teach Return-Oriented Programming. Best resource for learning ROP chains.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="resource-group">
+            <h3>🔍 Reverse Engineering</h3>
+            <ul>
+              <li>
+                <span class="resource-name"><a href="http://reversing.kr" target="_blank" rel="noopener">reversing.kr</a></span>
+                <span class="resource-desc">— Classic RE challenges at multiple difficulty levels. Good for practicing static and dynamic analysis.</span>
+              </li>
+              <li>
+                <span class="resource-name"><a href="https://crackmes.one" target="_blank" rel="noopener">crackmes.one</a></span>
+                <span class="resource-desc">— Community-submitted crackme binaries with difficulty ratings. Thousands of targets across multiple platforms.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="resource-group">
+            <h3>🕵️ Forensics</h3>
+            <ul>
+              <li>
+                <span class="resource-name"><a href="https://www.youtube.com/@13Cubed" target="_blank" rel="noopener">13Cubed YouTube</a></span>
+                <span class="resource-desc">— Excellent free video tutorials on digital forensics, memory analysis, and CTF forensics techniques.</span>
+              </li>
+              <li>
+                <span class="resource-name"><a href="https://aboutdfir.com" target="_blank" rel="noopener">AboutDFIR</a></span>
+                <span class="resource-desc">— Curated resource hub for digital forensics and incident response. Tools, training, and write-ups.</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- CHEATSHEETS -->
+      <section>
+        <h2 style="font-size: var(--font-2xl); font-weight: 800; margin-bottom: var(--space-xl);">Cheatsheets</h2>
+        <div class="cheatsheet-grid">
+
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-lang">bash — First Commands</span>
+              <button class="copy-btn" type="button">Copy</button>
+            </div>
+            <pre><code># Identify file type
+file challenge.bin
+
+# Search for readable strings
+strings challenge.bin | grep -i flag
+
+# Extract embedded files
+binwalk -e challenge.bin
+
+# Check metadata
+exiftool challenge.png
+
+# Hex dump first 32 bytes
+xxd challenge.bin | head -4
+
+# Find flag pattern in directory
+grep -r "CTF{" . 2>/dev/null</code></pre>
+          </div>
+
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-lang">bash — Web Quick Hits</span>
+              <button class="copy-btn" type="button">Copy</button>
+            </div>
+            <pre><code># Check HTTP headers
+curl -I http://target.ctf/
+
+# Grab robots.txt
+curl http://target.ctf/robots.txt
+
+# SQLi quick test
+curl "http://target.ctf/login?id=1'"
+
+# Directory brute-force
+gobuster dir -u http://target.ctf/ \
+  -w /usr/share/wordlists/dirb/common.txt
+
+# SQLMap one-liner
+sqlmap -u "http://target.ctf/?id=1" \
+  --batch --dump</code></pre>
+          </div>
+
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-lang">bash / python — Crypto Quick Hits</span>
+              <button class="copy-btn" type="button">Copy</button>
+            </div>
+            <pre><code># Base64 decode
+echo "Q1RGe...}" | base64 -d
+
+# Hex decode
+echo "4354467b..." | xxd -r -p
+
+# ROT13
+echo "text" | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+
+# Python: URL decode
+python3 -c "import urllib.parse; \
+  print(urllib.parse.unquote('%43%54%46'))"
+
+# Python: bytes to int
+python3 -c "print(int.from_bytes(b'CTF', 'big'))"
+
+# Crack hash
+hashcat -m 0 hash.txt rockyou.txt</code></pre>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- DOWNLOAD -->
+      <section>
+        <h2 style="font-size: var(--font-2xl); font-weight: 800; margin-bottom: var(--space-xl);">Download</h2>
+        <div class="download-card">
+          <div class="download-card-text">
+            <h3>📊 CTF Beginner Slide Deck</h3>
+            <p>The full beginner presentation covering all core CTF concepts — great for study or sharing with your team.</p>
+          </div>
+          <a href="../presentation/CTF_Beginners.pptx" class="btn btn-primary" download>
+            &#8659; Download PPTX
+          </a>
+        </div>
+      </section>
+
+    </div><!-- container -->
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <span class="footer-text">CTF Zero to Hero &mdash; Educational purposes only</span>
+      <a href="https://github.com/orgito1015/CTF-zero-to-hero" class="footer-link" target="_blank" rel="noopener">
+        &#128279; GitHub Repository
+      </a>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

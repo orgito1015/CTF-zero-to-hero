@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CTF Tools and setup — essential tools every CTF player needs with install commands.">
+  <title>Tools &amp; Setup — CTF Zero to Hero</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <span class="brand-icon" aria-hidden="true">&gt;</span>
+        CTF Zero to Hero
+      </a>
+      <button class="hamburger" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="guide.html">Guide</a></li>
+        <li><a href="categories.html">Categories</a></li>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="resources.html">Resources</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+
+      <section style="padding-bottom: var(--space-lg);">
+        <h1 class="section-heading">Tools &amp; Setup</h1>
+        <p class="tools-intro">
+          You don't need every tool. Start with the essentials for your category of interest,
+          then expand as you tackle more challenges. All of these are free and open source.
+        </p>
+      </section>
+
+      <!-- ESSENTIAL TOOLS TABLE -->
+      <section style="padding-top: 0;">
+        <h2 style="font-size: var(--font-2xl); font-weight: 800; margin-bottom: var(--space-lg);">Essential Tools</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Install Command</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>CyberChef</strong></td>
+                <td>Crypto / Encoding</td>
+                <td>Swiss-army knife for encoding, decoding, and data transformation. Works entirely in the browser.</td>
+                <td><span class="text-muted">Browser — no install needed</span></td>
+              </tr>
+              <tr>
+                <td><strong>Burp Suite Community</strong></td>
+                <td>Web</td>
+                <td>Intercept, inspect, and modify HTTP/HTTPS requests. Industry-standard web testing proxy.</td>
+                <td><code>apt install burpsuite</code> or <a href="https://portswigger.net/burp" target="_blank" rel="noopener">portswigger.net</a></td>
+              </tr>
+              <tr>
+                <td><strong>Ghidra</strong></td>
+                <td>Reverse Engineering</td>
+                <td>NSA's free, open-source reverse engineering framework. Decompiles x86, ARM, and many other architectures.</td>
+                <td><a href="https://ghidra-sre.org" target="_blank" rel="noopener">ghidra-sre.org</a> (manual download)</td>
+              </tr>
+              <tr>
+                <td><strong>Wireshark</strong></td>
+                <td>Forensics</td>
+                <td>Graphical network packet analyzer. Capture and inspect network traffic in real time.</td>
+                <td><code>apt install wireshark</code></td>
+              </tr>
+              <tr>
+                <td><strong>pwntools</strong></td>
+                <td>Pwn</td>
+                <td>Python library for exploit development. Simplifies writing shellcode, ROP chains, and remote connections.</td>
+                <td><code>pip3 install pwntools</code></td>
+              </tr>
+              <tr>
+                <td><strong>binwalk</strong></td>
+                <td>Forensics</td>
+                <td>Firmware and file analysis tool. Extracts embedded files and detects hidden data in binary files.</td>
+                <td><code>apt install binwalk</code></td>
+              </tr>
+              <tr>
+                <td><strong>hashcat</strong></td>
+                <td>Crypto</td>
+                <td>GPU-accelerated password and hash cracking tool. Supports MD5, SHA1, SHA256, bcrypt, and hundreds more.</td>
+                <td><code>apt install hashcat</code></td>
+              </tr>
+              <tr>
+                <td><strong>GDB + pwndbg</strong></td>
+                <td>Pwn</td>
+                <td>GNU Debugger with the pwndbg plugin — adds CTF-friendly views for stack, registers, and memory.</td>
+                <td>See setup instructions below</td>
+              </tr>
+              <tr>
+                <td><strong>SQLMap</strong></td>
+                <td>Web</td>
+                <td>Automated SQL injection detection and exploitation. Supports all major database backends.</td>
+                <td><code>pip3 install sqlmap</code></td>
+              </tr>
+              <tr>
+                <td><strong>exiftool</strong></td>
+                <td>Forensics</td>
+                <td>Read and write metadata from virtually any file format. Flags often hide in EXIF comments.</td>
+                <td><code>apt install exiftool</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ONE-CLICK SETUP -->
+      <section>
+        <h2 style="font-size: var(--font-2xl); font-weight: 800; margin-bottom: var(--space-md);">One-Click Setup</h2>
+        <p style="color: var(--color-text-muted); margin-bottom: var(--space-lg);">Install everything at once with the setup script included in this repository:</p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" type="button">Copy</button>
+          </div>
+          <pre><code>git clone https://github.com/orgito1015/CTF-zero-to-hero
+cd CTF-zero-to-hero
+bash scripts/setup.sh</code></pre>
+        </div>
+
+        <p style="color: var(--color-text-muted); font-size: var(--font-sm);">The setup script installs common tools available via <code>apt</code> and <code>pip3</code>. Run on Kali Linux or Ubuntu for best results.</p>
+
+        <h3 style="font-size: var(--font-xl); font-weight: 700; margin: var(--space-xl) 0 var(--space-md);">GDB + pwndbg Setup</h3>
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" type="button">Copy</button>
+          </div>
+          <pre><code># Install GDB
+apt install gdb
+
+# Install pwndbg plugin
+git clone https://github.com/pwndbg/pwndbg /opt/pwndbg
+cd /opt/pwndbg && ./setup.sh
+
+# Launch GDB with pwndbg
+gdb ./vuln</code></pre>
+        </div>
+      </section>
+
+      <!-- RECOMMENDED ENVIRONMENT -->
+      <section>
+        <h2 style="font-size: var(--font-2xl); font-weight: 800; margin-bottom: var(--space-lg);">Recommended Environment</h2>
+        <div class="env-cards">
+          <div class="env-card">
+            <h3>🐉 Kali Linux (Recommended)</h3>
+            <p style="font-size: var(--font-sm); color: var(--color-text-muted); margin-bottom: var(--space-md);">The gold standard for CTF and security work. Comes pre-loaded with hundreds of tools.</p>
+            <ul>
+              <li>Pre-installed: Burp Suite, Wireshark, binwalk, exiftool, hashcat, GDB, nmap, and many more</li>
+              <li>Actively maintained rolling-release distribution</li>
+              <li>Available as a VM image, ISO, WSL package, or Docker container</li>
+              <li>Large community with extensive documentation</li>
+              <li>Download: <a href="https://www.kali.org/get-kali/" target="_blank" rel="noopener">kali.org/get-kali</a></li>
+            </ul>
+          </div>
+          <div class="env-card">
+            <h3>🐧 Any Linux / WSL2</h3>
+            <p style="font-size: var(--font-sm); color: var(--color-text-muted); margin-bottom: var(--space-md);">Ubuntu, Debian, or Arch Linux work great too. WSL2 on Windows is a solid option.</p>
+            <ul>
+              <li>Ubuntu 22.04 LTS is a reliable, well-supported choice</li>
+              <li>WSL2 (Windows Subsystem for Linux) is surprisingly capable for CTF work</li>
+              <li>Use Docker for isolated challenge environments</li>
+              <li>Virtual machines (VirtualBox, VMware) keep your host OS safe</li>
+              <li>macOS with Homebrew works for most tools (except some Linux-specific ones)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- container -->
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <span class="footer-text">CTF Zero to Hero &mdash; Educational purposes only</span>
+      <a href="https://github.com/orgito1015/CTF-zero-to-hero" class="footer-link" target="_blank" rel="noopener">
+        &#128279; GitHub Repository
+      </a>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
