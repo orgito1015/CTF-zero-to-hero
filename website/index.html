@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CTF Zero to Hero — Learn Capture The Flag cybersecurity competitions from scratch.">
+  <title>CTF Zero to Hero — Home</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <span class="brand-icon" aria-hidden="true">&gt;</span>
+        CTF Zero to Hero
+      </a>
+      <button class="hamburger" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="guide.html">Guide</a></li>
+        <li><a href="categories.html">Categories</a></li>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="resources.html">Resources</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <h1 class="hero-heading">Learn CTF from <span>Zero.</span></h1>
+        <p class="hero-sub">Capture The Flag competitions teach real-world hacking skills. This is your starting point.</p>
+        <div class="hero-buttons">
+          <a href="guide.html" class="btn btn-primary">Start the Guide &rarr;</a>
+          <a href="categories.html" class="btn btn-outline">Browse Categories</a>
+        </div>
+        <p class="hero-terminal">
+          <span class="prompt">$</span> whoami &rarr; <span class="font-mono">future-hacker</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+      <div class="container">
+        <div class="stats-inner">
+          <div class="stat-item">
+            <span class="stat-number">6</span>
+            <span class="stat-label">Categories</span>
+          </div>
+          <div class="stat-divider" aria-hidden="true"></div>
+          <div class="stat-item">
+            <span class="stat-number">15+</span>
+            <span class="stat-label">Tools</span>
+          </div>
+          <div class="stat-divider" aria-hidden="true"></div>
+          <div class="stat-item">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Free</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works">
+      <div class="container">
+        <h2 class="section-heading">How CTF Works</h2>
+        <p class="section-subheading">Three steps from challenge to victory.</p>
+        <div class="step-cards">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <h3 class="step-title">Find a Challenge</h3>
+            <p>Browse challenges across 6 categories — web, crypto, pwn, reversing, forensics, and misc. Each challenge hides a secret string called a flag.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <h3 class="step-title">Capture the Flag</h3>
+            <p>Exploit vulnerabilities, decode messages, or analyze files to find the hidden flag string. Think creatively and use your toolkit.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <h3 class="step-title">Submit &amp; Score</h3>
+            <p>Submit <code>CTF{...}</code> to earn points. The team with the most points at the end of the competition wins. Most CTFs are 24–72 hours.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORIES PREVIEW -->
+    <section style="background: var(--color-bg-card); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+      <div class="container">
+        <h2 class="section-heading">The 6 Categories</h2>
+        <p class="section-subheading">Every CTF challenge falls into one of these six areas.</p>
+        <div class="categories-grid">
+
+          <div class="cat-card">
+            <span class="cat-icon">🌐</span>
+            <span class="cat-name">Web Exploitation</span>
+            <span class="cat-desc">Attack websites and web applications to find hidden flags</span>
+            <span class="difficulty" aria-label="Difficulty: 2 of 4">
+              <span class="dot dot-filled">●</span>
+              <span class="dot dot-filled">●</span>
+              <span class="dot dot-empty">○</span>
+              <span class="dot dot-empty">○</span>
+            </span>
+          </div>
+
+          <div class="cat-card">
+            <span class="cat-icon">🔐</span>
+            <span class="cat-name">Cryptography</span>
+            <span class="cat-desc">Break codes, ciphers, and cryptographic weaknesses</span>
+            <span class="difficulty" aria-label="Difficulty: 3 of 4">
+              <span class="dot dot-filled">●</span>
+              <span class="dot dot-filled">●</span>
+              <span class="dot dot-filled">●</span>
+              <span class="dot dot-empty">○</span>
+            </span>
+          </div>
+
+          <div class="cat-card">
+            <span class="cat-icon">💥</span>
+            <span class="cat-name">Pwn / Binary</span>
+            <span class="cat-desc">Exploit memory corruption in running programs</span>
+            <span class="difficulty" aria-label="Difficulty: 4 of 4">
+              <span class="dot dot-filled">●</span>
+              <span class="dot dot-filled">●</span>
+              <span class="dot dot-filled">●</span>
+              <span class="dot dot-filled">●</span>
+            </span>
+          </div>
+
+          <div class="cat-card">
+            <span class="cat-icon">🔍</span>
+            <span class="cat-name">Reverse Engineering</span>
+            <span class="cat-desc">Understand compiled code without the source</span>
+            <span class="difficulty" aria-label="Difficulty: 3 of 4">
+              <span class="dot dot-filled">●</span>
+              <span class="dot dot-filled">●</span>
+              <span class="dot dot-filled">●</span>
+              <span class="dot dot-empty">○</span>
+            </span>
+          </div>
+
+          <div class="cat-card">
+            <span class="cat-icon">🕵️</span>
+            <span class="cat-name">Forensics</span>
+            <span class="cat-desc">Recover hidden information from files and network captures</span>
+            <span class="difficulty" aria-label="Difficulty: 2 of 4">
+              <span class="dot dot-filled">●</span>
+              <span class="dot dot-filled">●</span>
+              <span class="dot dot-empty">○</span>
+              <span class="dot dot-empty">○</span>
+            </span>
+          </div>
+
+          <div class="cat-card">
+            <span class="cat-icon">⚙️</span>
+            <span class="cat-name">Misc</span>
+            <span class="cat-desc">Scripting puzzles, trivia, jail escapes, and creative challenges</span>
+            <span class="difficulty" aria-label="Difficulty: 1 of 4">
+              <span class="dot dot-filled">●</span>
+              <span class="dot dot-empty">○</span>
+              <span class="dot dot-empty">○</span>
+              <span class="dot dot-empty">○</span>
+            </span>
+          </div>
+
+        </div>
+        <p class="mt-xl"><a href="categories.html">See detailed guides &rarr;</a></p>
+      </div>
+    </section>
+
+    <!-- QUICK START -->
+    <section>
+      <div class="container">
+        <h2 class="section-heading">Get Started in 3 Commands</h2>
+        <p class="section-subheading">Clone the repo, set up your tools, and start hacking.</p>
+        <div class="code-block quick-start-block">
+          <div class="code-block-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" type="button">Copy</button>
+          </div>
+          <pre><code>git clone https://github.com/orgito1015/CTF-zero-to-hero
+cd CTF-zero-to-hero
+bash scripts/setup.sh</code></pre>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <span class="footer-text">CTF Zero to Hero &mdash; Educational purposes only</span>
+      <a href="https://github.com/orgito1015/CTF-zero-to-hero" class="footer-link" target="_blank" rel="noopener">
+        &#128279; GitHub Repository
+      </a>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
